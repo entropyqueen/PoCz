@@ -25,20 +25,15 @@ def main() :
         try :
             print target_list[x]
             data = requests.request("GET", target_list[x], verify=False, timeout=1)
+            for uri in target_r.findall(data.content) :
+                if uri.strip('/') not in target_list :
+                    target_list.append(uri.strip('/'))
         except IndexError :
             print "No more uri."
             return 0
         except :
             pass
-
-        try :
-            for uri in target_r.findall(data.content) :
-                if uri.strip('/') not in target_list :
-                    target_list.append(uri.strip('/'))
-        except :
-            pass
         x += 1
-       
 
     return 0
         
