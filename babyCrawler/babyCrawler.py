@@ -6,22 +6,9 @@
 #
 
 import re
+import random
 import requests
 import sys
-
-def process(target, old_targets, target_r) :
-
-    try :
-        data = requests.request("GET", target, verify=False)
-    except :
-        return # if we fail, let's move on, there is plenty of stuff to discover anyway!
-    uris = target_r.findall(data.content)
-    print("{}".format(target))
-
-    for uri in uris :
-        if uri not in old_targets:
-            old_targets.append(uri)
-            process(uri, old_targets, target_r)
 
 def main() :
 
@@ -29,13 +16,23 @@ def main() :
         print("Usage: {} <start_uri>".format(sys.argv[0]))
         return 1
 
-    target = sys.argv[1]
-    old_targets = [target]
+    target_list = [sys.argv[1]]
     target_r = re.compile("(https?://[a-z0-9\.\-_]+/?)")
+    x = 0
 
-    process(target, old_targets, target_r)
+    while True :
+        print target_list[x]
+        try :
+            data = requests.request("GET", target_list[x], verify=False)
+        except :
+            pass
 
-    print("No new uri found")
+        for uri in target_r.findall(data.content) :
+            if uri.strip('/') not in target_list :
+                target_list.append(uri.strip('/'))
+        x += 1
+       
+
     return 0
         
 
