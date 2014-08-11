@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 #  BabyCrawler PoC
+#  basic and simple uri crawler for web pages
 #  by Ark, just4fun
 #  feel free to share =)
 #
@@ -21,9 +22,12 @@ def main() :
     x = 0
 
     while True :
-        print target_list[x]
         try :
+            print target_list[x]
             data = requests.request("GET", target_list[x], verify=False, timeout=1)
+        except IndexError :
+            print "No more uri."
+            return 0
         except :
             pass
 
