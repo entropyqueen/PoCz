@@ -23,13 +23,16 @@ def main() :
     while True :
         print target_list[x]
         try :
-            data = requests.request("GET", target_list[x], verify=False)
+            data = requests.request("GET", target_list[x], verify=False, timeout=1)
         except :
             pass
 
-        for uri in target_r.findall(data.content) :
-            if uri.strip('/') not in target_list :
-                target_list.append(uri.strip('/'))
+        try :
+            for uri in target_r.findall(data.content) :
+                if uri.strip('/') not in target_list :
+                    target_list.append(uri.strip('/'))
+        except :
+            pass
         x += 1
        
 
