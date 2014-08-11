@@ -17,7 +17,7 @@ def main() :
         return 1
 
     target_list = [sys.argv[1]]
-    target_r = re.compile("(https?://[a-z0-9\.\-_]+/?)")
+    target_r = re.compile("href=[\"']([a-z]+://[a-z0-9\.\-_]+/?)[\"']")
     x = 0
 
     while True :
