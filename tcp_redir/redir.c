@@ -161,9 +161,8 @@ int server_run(short iport, short oport) {
                 if (ret <= 0) {
                    rm_node(&icli, tmp);
                 }
-                buffer[ret - 1] = 0;
                 while (tmp2) {
-                    write(tmp2->_fd, buffer, strlen(buffer));
+                    write(tmp2->_fd, buffer, ret);
                     tmp2 = tmp2->_next;
                 }
             }
