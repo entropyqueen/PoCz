@@ -110,6 +110,7 @@ int server_run(short port) {
         /* Select initialization */
         FD_ZERO(&rfd);
         FD_SET(ssock, &rfd);
+        FD_SET(0, &rfd); /* fd for read on stdin */
         max = set_fds(cli, &rfd);
         if (ssock > max)
             max = ssock;
@@ -122,6 +123,19 @@ int server_run(short port) {
         /* Check fds */
         if (FD_ISSET(ssock, &rfd) != 0) 
             add_node(ssock, &cli); 
+
+        if (FD_ISSET(0, &rfd) != 0) {
+            ret = read(0, buffer, sizeof(buffer));
+            if (ret < 0)
+                perror("read");
+            else if (ret == 0) 
+                run = 0;
+            tmp = cli;
+            while (tmp) {
+                write(tmp->_fd, buffer, ret);
+                tmp = tmp->_next;
+            }
+        }
 
        /* copy input to output */
         tmp = cli;
@@ -137,6 +151,7 @@ int server_run(short port) {
             tmp = tmp->_next;
         }
     }
+    close(ssock);
     free_list(cli);
     return 0;
 }
