@@ -19,7 +19,7 @@ def main():
         return 1
 
     target_list = [codecs.encode(sys.argv[1], 'utf-8').strip(b'/')]
-    external_r = re.compile(b"(https?://[\w]+\.[\w\.\-_/%]+)")
+    external_r = re.compile(b"(https?://[\w\-_]+\.[\w\.\-_/%]+)")
     internal_r = re.compile(b"<.*[href|src]=['\"]([\w/\\\-_\.])['\"].*>")
     base_r = re.compile(b"https?://([\w\-_]+\.[\w\.\-_]+)")
     x = 0
