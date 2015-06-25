@@ -27,8 +27,10 @@ def main():
     base = base_r.findall(target_list[0])[0]
     while True:
         try:
-            print(target_list[x])
             data = requests.request("GET", target_list[x], timeout=1)
+            if not data.ok:
+                continue
+            print(target_list[x])
 
             tmpbase = target_list[x][:target_list[x].rfind(b'/') + 1]
             if tmpbase == b'http://' or tmpbase == b'https://':
