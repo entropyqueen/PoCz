@@ -3,9 +3,11 @@ Baby crawler
 
 This baby crawler folder contains just some PoC of crawlers
 
-# babyCrawler.py
-  this script will list all the different urls availables
-  I think it could be optimized, but I don't know how for now, and I don't know how the "in" keyword of python is implemented
+# baby.py
+  this script crawls the web, dumping any new uri it founds
+
+# local.py
+  this one is a crawler that aim to look for every pages it can found in any domain 
 
 # sortRefs.py
-  it will do the same thing as babyCrawler, but will sort the resulting list and provide you the top10 of the most 'refered to' websites.
+  performs the same action than baby.py but keeps a counter of how many times a website is encountered, and finaly sort them
