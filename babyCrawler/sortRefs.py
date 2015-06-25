@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 #  BabyCrawler PoC
 #  Real time referencer, crawl uris and sort them in order of reference

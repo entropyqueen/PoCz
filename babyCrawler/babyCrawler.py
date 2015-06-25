@@ -10,33 +10,35 @@ import re
 import random
 import requests
 import sys
+import codecs
 
-def main() :
+def main():
 
-    if len(sys.argv) != 2 :
+    if len(sys.argv) != 2:
         print("Usage: {} <start_uri>".format(sys.argv[0]))
         return 1
 
-    target_list = [sys.argv[1]]
-    target_r = re.compile("href=[\"']([a-z]+://[a-z0-9\.\-_]+/?)[\"']")
+    target_list = [codecs.encode(sys.argv[1], 'utf-8').strip(b'/')]
+    target_r = re.compile(b"(https?://[\w]+\.[\w\.\-_]+/?)")
     x = 0
 
-    while True :
-        try :
-            print target_list[x]
-            data = requests.request("GET", target_list[x], verify=False, timeout=1)
-            for uri in target_r.findall(data.content) :
-                if uri.strip('/') not in target_list :
-                    target_list.append(uri.strip('/'))
-        except IndexError :
-            print "No more uri."
-            return 0
-        except :
+    while True:
+        try:
+
+            print(target_list[x])
+            data = requests.request("GET", target_list[x], timeout=1)
+
+            for uri in target_r.findall(data.content):
+                if uri.strip(b'/') not in target_list:
+                    target_list.append(uri.strip(b'/'))
+        except IndexError:
+            print("No more uri.")
+            break
+        except:
             pass
         x += 1
 
     return 0
-        
 
-if __name__ == "__main__" :
+if __name__ == "__main__":
     exit(main())
