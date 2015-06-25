@@ -19,7 +19,8 @@ def main():
         return 1
 
     target_list = [codecs.encode(sys.argv[1], 'utf-8').strip(b'/')]
-    target_r = re.compile(b"(https?://[\w]+\.[\w\.\-_/%]+)")
+    external_r = re.compile(b"(https?://[\w]+\.[\w\.\-_/%]+)")
+    internal_r = re.compile(b"<.*[href|src]=['\"]([\w/\\\-_\.])['\"].*>")
     base_r = re.compile(b"https?://([\w]+\.[\w\.\-_]+)")
     x = 0
 
@@ -29,9 +30,22 @@ def main():
             print(target_list[x])
             data = requests.request("GET", target_list[x], timeout=1)
 
-            for uri in target_r.findall(data.content):
+            tmpbase = target_list[x][:target_list[x].rfind(b'/') + 1]
+            if tmpbase == b'http://' or tmpbase == b'https://':
+                tmpbase = target_list[x] + b'/'
+            for uri in internal_r.findall(data.content):
+                new_uri = b''.join((tmpbase, uri)).strip(b'/')
+                try:
+                    if uri.strip(b'/') not in target_list and base_r.findall(uri)[0] == base:
+                        target_list.append(new_uri)
+                except:
+                    if new_uri.strip(b'/') not in target_list:
+                        target_list.append(new_uri)
+
+            for uri in external_r.findall(data.content):
                 if uri.strip(b'/') not in target_list and base_r.findall(uri)[0] == base:
                     target_list.append(uri.strip(b'/'))
+
         except IndexError:
             print("No more uri.")
             break
