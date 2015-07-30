@@ -52,8 +52,8 @@ class Shifter(object) :
 
         self._inc = os.fsencode(incremental if incremental != None else '')
         self._dec = os.fsencode(decremental if decremental != None else '')
-        self._inc_v = increment_val if increment_val != None else 1
-        self._dec_v = decrement_val if decrement_val != None else 1
+        self._inc_v = int(increment_val, 0) if increment_val != None else 1
+        self._dec_v = int(decrement_val, 0) if decrement_val != None else 1
             
     def clean(self):
         """
@@ -124,6 +124,11 @@ class Shifter(object) :
 
 if __name__ == "__main__":
 
+    if len(sys.argv) == 1:
+        # if no args at all, let's just do a rot13
+        Shifter(13).process()
+        exit()
+    
     parser = argparse.ArgumentParser(description='Rotates char in string or files')
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--value', '-v', metavar='X',
