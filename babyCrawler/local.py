@@ -32,27 +32,23 @@ def main():
                 continue
             print(target_list[x])
 
+            for uri in external_r.findall(data.content):
+                if uri.strip(b'/') not in target_list and base_r.findall(uri)[0] == base:
+                    target_list.append(uri.strip(b'/'))
+
             tmpbase = target_list[x][:target_list[x].rfind(b'/') + 1]
             if tmpbase == b'http://' or tmpbase == b'https://':
                 tmpbase = target_list[x] + b'/'
             for uri in internal_r.findall(data.content):
                 new_uri = b''.join((tmpbase, uri)).strip(b'/')
-                try:
-                    if uri.strip(b'/') not in target_list and base_r.findall(uri)[0] == base:
-                        target_list.append(new_uri)
-                except:
-                    if new_uri.strip(b'/') not in target_list:
-                        target_list.append(new_uri)
-
-            for uri in external_r.findall(data.content):
-                if uri.strip(b'/') not in target_list and base_r.findall(uri)[0] == base:
-                    target_list.append(uri.strip(b'/'))
+                if new_uri.strip(b'/') not in target_list:
+                    target_list.append(new_uri)
 
         except IndexError:
             print("No more uri.")
             break
         except:
-            pass
+            continue
         x += 1
 
     return 0
